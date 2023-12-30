@@ -6,7 +6,7 @@
   "name": "Entity Outliner",
   "description": "Allows you to select entity types to outline, making them visible through all obstructions within render distance.",
   "authors": [
-    "SioGabx"
+    "adamviola, SioGabx"
   ],
   "contact": {
     "homepage": "https://github.com/adamviola/EntityOutliner",

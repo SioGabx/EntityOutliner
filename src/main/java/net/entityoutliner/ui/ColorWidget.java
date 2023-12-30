@@ -44,22 +44,6 @@ public class ColorWidget extends PressableWidget {
         EntitySelector.outlinedEntityTypes.put(this.entityType, this.color);
     }
 
-/*
-    @Override
-    public void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
-        MinecraftClient minecraftClient = MinecraftClient.getInstance();
-        RenderSystem.setShaderTexture(0, TEXTURE);
-        RenderSystem.enableDepthTest();
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, this.alpha);
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
-        RenderSystem.blendFunc(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA);
-        //drawGuiTexture(context, TEXTURE, this.getX(), this.getY(), this.isFocused() ? 20 : 0, this.color.ordinal() * 20, 20, 20, 40, 180, 1);
-        context.drawGuiTexture(TEXTURE, this.getX(), this.getY(), this.isFocused() ? 20 : 0, this.color.ordinal() * 20, 20, 20, 40, 180, 1);
-        System.out.println(this.getX() + " / " + this.getY());
-    }
-*/
-
     @Override
     protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
         MinecraftClient minecraftClient = MinecraftClient.getInstance();
