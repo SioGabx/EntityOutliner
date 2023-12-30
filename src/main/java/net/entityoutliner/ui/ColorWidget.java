@@ -11,6 +11,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.widget.PressableWidget;
+import net.minecraft.client.texture.NativeImage;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.text.Text;
@@ -43,7 +44,9 @@ public class ColorWidget extends PressableWidget {
         EntitySelector.outlinedEntityTypes.put(this.entityType, this.color);
     }
 
-    public void renderButton(DrawContext context, int mouseX, int mouseY, float delta) {
+/*
+    @Override
+    public void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
         MinecraftClient minecraftClient = MinecraftClient.getInstance();
         RenderSystem.setShaderTexture(0, TEXTURE);
         RenderSystem.enableDepthTest();
@@ -53,22 +56,38 @@ public class ColorWidget extends PressableWidget {
         RenderSystem.blendFunc(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA);
         //drawGuiTexture(context, TEXTURE, this.getX(), this.getY(), this.isFocused() ? 20 : 0, this.color.ordinal() * 20, 20, 20, 40, 180, 1);
         context.drawGuiTexture(TEXTURE, this.getX(), this.getY(), this.isFocused() ? 20 : 0, this.color.ordinal() * 20, 20, 20, 40, 180, 1);
+        System.out.println(this.getX() + " / " + this.getY());
+    }
+*/
+
+    @Override
+    protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
+        MinecraftClient minecraftClient = MinecraftClient.getInstance();
+        super.renderWidget(context, mouseX, mouseY, delta);
+        int color = (this.color.red << 16) | (this.color.green << 8) | this.color.blue;
+        this.setMessage(this.color.colorname);
+        this.drawMessage(context, minecraftClient.textRenderer, color);
     }
 
+
+
+
+
     public enum Color {
-        WHITE(255, 255, 255),
-        BLACK(0, 0, 0),
-        RED(255, 0, 0),
-        ORANGE(255, 127, 0),
-        YELLOW(255, 255, 0),
-        GREEN(0, 255, 0),
-        BLUE(0, 0, 255),
-        PURPLE(127, 0, 127),
-        PINK(255, 155, 182);
+        WHITE(255, 255, 255, Text.of("WHITE")),
+        BLACK(0, 0, 0, Text.of("BLACK")),
+        RED(255, 0, 0, Text.of("RED")),
+        ORANGE(255, 127, 0, Text.of("ORANGE")),
+        YELLOW(255, 255, 0, Text.of("YELLOW")),
+        GREEN(0, 255, 0, Text.of("GREEN")),
+        BLUE(0, 0, 255, Text.of("BLUE")),
+        PURPLE(127, 0, 127, Text.of("PURPLE")),
+        PINK(255, 155, 182, Text.of("PINK"));
 
         public int red;
         public int green;
         public int blue;
+        public Text colorname;
 
         private static final Map<SpawnGroup, Color> spawnGroupColors = Map.of(
             SpawnGroup.AMBIENT, Color.PURPLE,
@@ -83,10 +102,11 @@ public class ColorWidget extends PressableWidget {
 
         private static Color[] colors = Color.values();
 
-        private Color(int red, int green, int blue) {
+        private Color(int red, int green, int blue, Text colorname) {
             this.red = red;
             this.green = green;
             this.blue = blue;
+            this.colorname = colorname;
         }
 
         public static Color of(SpawnGroup group) {

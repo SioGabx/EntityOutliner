@@ -40,8 +40,8 @@ public class EntitySelector extends Screen {
         if (searcher == null) {
             initializePrefixTree();
         }
-
-        this.list = new EntityListWidget(this.client, this.width, this.height, 32, this.height - 32, 25);
+        int margin = 35;
+        this.list = new EntityListWidget(this.client, this.width, this.height - margin*2, margin, 25);
         this.addSelectableChild(list);
 
         // Create search field
@@ -243,7 +243,6 @@ public class EntitySelector extends Screen {
 
         // Render scrolling list
         this.list.render(context, mouseX, mouseY, delta);
-
         // Render our search bar
         this.setFocused(this.searchField);
         //this.searchField.setTextFieldFocused(true);

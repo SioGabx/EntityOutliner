@@ -24,7 +24,7 @@ import net.minecraft.util.Language;
 @Environment(EnvType.CLIENT)
 public class EntityListWidget extends ElementListWidget<EntityListWidget.Entry> {
 
-    public EntityListWidget(MinecraftClient client, int width, int height, int top, int bottom, int itemHeight) {
+    public EntityListWidget(MinecraftClient client, int width, int height, int top,int itemHeight) {
         super(client, width, height, top, itemHeight);
         this.centerListVertically = false;
     }
@@ -67,9 +67,13 @@ public class EntityListWidget extends ElementListWidget<EntityListWidget.Entry> 
         }
 
         public static EntityListWidget.EntityEntry create(EntityType<?> entityType, int width) {
+
             return new EntityListWidget.EntityEntry(
-                    CheckboxWidget.builder(entityType.getName(), MinecraftClient.getInstance().textRenderer).pos(width / 2 - 155, 0).checked(EntitySelector.outlinedEntityTypes.containsKey(entityType)).build(),
-                new ColorWidget(width / 2 + 130, 0, 310, 20, entityType),
+                    CheckboxWidget
+                            .builder(entityType.getName(), MinecraftClient.getInstance().textRenderer)
+                            .pos(width / 2 - 155, 0)
+                            .checked(EntitySelector.outlinedEntityTypes.containsKey(entityType)).build(),
+                new ColorWidget(width / 2 + 75, 0, 75, 20, entityType),
                 entityType
             );
         }
