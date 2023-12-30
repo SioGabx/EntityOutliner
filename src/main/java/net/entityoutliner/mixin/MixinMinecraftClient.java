@@ -11,13 +11,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(MinecraftClient.class)
 public abstract class MixinMinecraftClient {
-
     @Inject(method = "hasOutline", at = @At("HEAD"), cancellable = true)
     private void outlineEntities(Entity entity, CallbackInfoReturnable<Boolean> ci) {
         if (EntityOutliner.outliningEntities && EntitySelector.outlinedEntityTypes != null) {
             if (EntitySelector.outlinedEntityTypes.containsKey(entity.getType())) {
                 ci.setReturnValue(true);
-            } 
+           }
         }
-    }
+   }
 }

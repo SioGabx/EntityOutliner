@@ -3,6 +3,7 @@ package net.entityoutliner.ui;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.text.Text;
 import org.apache.commons.lang3.StringUtils;
 
 import net.entityoutliner.ui.ColorWidget.Color;
@@ -24,7 +25,7 @@ import net.minecraft.util.Language;
 public class EntityListWidget extends ElementListWidget<EntityListWidget.Entry> {
 
     public EntityListWidget(MinecraftClient client, int width, int height, int top, int bottom, int itemHeight) {
-        super(client, width, height, top, bottom, itemHeight);
+        super(client, width, height, top, itemHeight);
         this.centerListVertically = false;
     }
 
@@ -67,11 +68,13 @@ public class EntityListWidget extends ElementListWidget<EntityListWidget.Entry> 
 
         public static EntityListWidget.EntityEntry create(EntityType<?> entityType, int width) {
             return new EntityListWidget.EntityEntry(
-                new CheckboxWidget(width / 2 - 155, 0, 310, 20, entityType.getName(), EntitySelector.outlinedEntityTypes.containsKey(entityType)),
+                    CheckboxWidget.builder(entityType.getName(), MinecraftClient.getInstance().textRenderer).pos(width / 2 - 155, 0).checked(EntitySelector.outlinedEntityTypes.containsKey(entityType)).build(),
                 new ColorWidget(width / 2 + 130, 0, 310, 20, entityType),
                 entityType
             );
         }
+        //new CheckboxWidget(width / 2 - 155, 0,  entityType.getName(), textRender, EntitySelector.outlinedEntityTypes.containsKey(entityType), null),
+
 
         public void render(DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
             this.checkbox.setY(y);

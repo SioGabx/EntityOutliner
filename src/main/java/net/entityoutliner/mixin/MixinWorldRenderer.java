@@ -16,9 +16,10 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.scoreboard.AbstractTeam;
-
+/**/
 @Mixin(WorldRenderer.class)
 public abstract class MixinWorldRenderer {
+
 
     @Inject(method = "renderEntity", at = @At("HEAD"))
     private void renderEntity(Entity entity, double cameraX, double cameraY, double cameraZ, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, CallbackInfo ci) {
@@ -42,5 +43,6 @@ public abstract class MixinWorldRenderer {
                 }
             }
         }
+
     }
 }
