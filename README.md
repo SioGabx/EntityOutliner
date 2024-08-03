@@ -1,6 +1,13 @@
 # Find community version
 https://github.com/adamviola/EntityOutliner/forks?include=active&page=1&period=2y&sort_by=last_updated
 
+# Availables versions
+- 1.21  : https://github.com/SioGabx/EntityOutliner/releases/1.21
+- 1.20.4 : https://github.com/SioGabx/EntityOutliner/releases/1.20.2
+- 1.20.2 : https://github.com/SioGabx/EntityOutliner/releases/1.20.4
+
+
+
 # Entity Outliner
 Entity Outliner is a clientside mod that allows you to select entity types to outline, making them visible through obstructions at any distance.
 <a href="https://github.com/SioGabx/EntityOutliner/releases"><img alt="GitHub all releases" src="https://img.shields.io/github/downloads/SioGabx/EntityOutliner/total?color=%2316d68a&logo=github"></a>
