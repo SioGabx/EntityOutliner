@@ -35,11 +35,12 @@ public abstract class MixinWorldRenderer {
                 PlayerEntity player = (PlayerEntity) entity;
                 AbstractTeam team = player.getScoreboardTeam();
                 if (team != null && team.getColor().getColorValue() != null) {
-                    int hexColor = team.getColor().getColorValue();
-                    int blue = hexColor % 256;
-                    int green = (hexColor / 256) % 256;
-                    int red = (hexColor / 65536) % 256;
-                    outlineVertexConsumers.setColor(red, green, blue, 255);
+                    int argbInt = team.getColor().getColorValue();
+                    int alpha = (argbInt >> 24) & 0xFF;
+                    int red = (argbInt >> 16) & 0xFF;
+                    int green = (argbInt >> 8) & 0xFF;
+                    int blue = argbInt & 0xFF;
+                    outlineVertexConsumers.setColor(red, green, blue, alpha);
                 }
             }
         }
