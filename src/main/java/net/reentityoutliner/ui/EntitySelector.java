@@ -1,12 +1,12 @@
-package net.entityoutliner.ui;
+package net.reentityoutliner.ui;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
-import net.entityoutliner.EntityOutliner;
-import net.entityoutliner.ui.ColorWidget.Color;
+import net.reentityoutliner.ReEntityOutliner;
+import net.reentityoutliner.ui.ColorWidget.Color;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -28,7 +28,7 @@ public class EntitySelector extends Screen {
     public static HashMap<EntityType<?>, Color> outlinedEntityTypes = new HashMap<>();
 
     public EntitySelector(Screen parent) {
-        super(Text.translatable("title.entity-outliner.selector"));
+        super(Text.translatable("title.re-entity-outliner.selector"));
         this.parent = parent;
     }
 
@@ -56,32 +56,32 @@ public class EntitySelector extends Screen {
         int buttonY = this.height - 16 - (buttonHeight / 2);
 
         // Add sort type button
-        // this.addDrawableChild(new ButtonWidget(buttonOffset, buttonY, buttonWidth, buttonHeight, Text.translatable(groupByCategory ? "button.entity-outliner.categories" : "button.entity-outliner.no-categories"), (button) -> {
+        // this.addDrawableChild(new ButtonWidget(buttonOffset, buttonY, buttonWidth, buttonHeight, Text.translatable(groupByCategory ? "button.re-entity-outliner.categories" : "button.re-entity-outliner.no-categories"), (button) -> {
         //     groupByCategory = !groupByCategory;
         //     this.onSearchFieldUpdate(this.searchField.getText());
-        //     button.setMessage(Text.translatable(groupByCategory ? "button.entity-outliner.categories" : "button.entity-outliner.no-categories"));
+        //     button.setMessage(Text.translatable(groupByCategory ? "button.re-entity-outliner.categories" : "button.re-entity-outliner.no-categories"));
         // }));
 
         this.addDrawableChild(
                 ButtonWidget.builder(
-                        Text.translatable(groupByCategory ? "button.entity-outliner.categories" : "button.entity-outliner.no-categories"),
+                        Text.translatable(groupByCategory ? "button.re-entity-outliner.categories" : "button.re-entity-outliner.no-categories"),
                         (button) -> {
                             groupByCategory = !groupByCategory;
                             this.onSearchFieldUpdate(this.searchField.getText());
-                            button.setMessage(Text.translatable(groupByCategory ? "button.entity-outliner.categories" : "button.entity-outliner.no-categories"));
+                            button.setMessage(Text.translatable(groupByCategory ? "button.re-entity-outliner.categories" : "button.re-entity-outliner.no-categories"));
                         }
                 ).size(buttonWidth, buttonHeight).position(buttonOffset, buttonY).build()
         );
 
         // Add Deselect All button
-        // this.addDrawableChild(new ButtonWidget(buttonOffset + (buttonWidth + buttonInterval), buttonY, buttonWidth, buttonHeight, Text.translatable("button.entity-outliner.deselect"), (button) -> {
+        // this.addDrawableChild(new ButtonWidget(buttonOffset + (buttonWidth + buttonInterval), buttonY, buttonWidth, buttonHeight, Text.translatable("button.re-entity-outliner.deselect"), (button) -> {
         //     outlinedEntityTypes.clear();
         //     this.onSearchFieldUpdate(this.searchField.getText());
         // }));
 
         this.addDrawableChild(
                 ButtonWidget.builder(
-                        Text.translatable("button.entity-outliner.deselect"),
+                        Text.translatable("button.re-entity-outliner.deselect"),
                         (button) -> {
                             String text = this.searchField.getText();
                             if (searcher.containsKey(text)) {
@@ -100,7 +100,7 @@ public class EntitySelector extends Screen {
 
         this.addDrawableChild(
                 ButtonWidget.builder(
-                        Text.translatable("button.entity-outliner.select"),
+                        Text.translatable("button.re-entity-outliner.select"),
                         (button) -> {
                             String text = this.searchField.getText();
                             if (searcher.containsKey(text)) {
@@ -126,29 +126,29 @@ public class EntitySelector extends Screen {
         */
 
         // Add toggle outlining button
-        // this.addDrawableChild(new ButtonWidget(buttonOffset + (buttonWidth + buttonInterval) * 2, buttonY, buttonWidth, buttonHeight, Text.translatable(EntityOutliner.outliningEntities ? "button.entity-outliner.on" : "button.entity-outliner.off"), (button) -> {
-        //     EntityOutliner.outliningEntities = !EntityOutliner.outliningEntities;
-        //     button.setMessage(Text.translatable(EntityOutliner.outliningEntities ? "button.entity-outliner.on" : "button.entity-outliner.off"));
+        // this.addDrawableChild(new ButtonWidget(buttonOffset + (buttonWidth + buttonInterval) * 2, buttonY, buttonWidth, buttonHeight, Text.translatable(reentityoutliner.outliningEntities ? "button.re-entity-outliner.on" : "button.re-entity-outliner.off"), (button) -> {
+        //     reentityoutliner.outliningEntities = !reentityoutliner.outliningEntities;
+        //     button.setMessage(Text.translatable(reentityoutliner.outliningEntities ? "button.re-entity-outliner.on" : "button.re-entity-outliner.off"));
         // }));
 
         this.addDrawableChild(
                 ButtonWidget.builder(
-                        Text.translatable(EntityOutliner.outliningEntities ? "button.entity-outliner.on" : "button.entity-outliner.off"),
+                        Text.translatable(ReEntityOutliner.outliningEntities ? "button.re-entity-outliner.on" : "button.re-entity-outliner.off"),
                         (button) -> {
-                            EntityOutliner.outliningEntities = !EntityOutliner.outliningEntities;
-                            button.setMessage(Text.translatable(EntityOutliner.outliningEntities ? "button.entity-outliner.on" : "button.entity-outliner.off"));
+                            ReEntityOutliner.outliningEntities = !ReEntityOutliner.outliningEntities;
+                            button.setMessage(Text.translatable(ReEntityOutliner.outliningEntities ? "button.re-entity-outliner.on" : "button.re-entity-outliner.off"));
                         }
                 ).size(buttonWidth, buttonHeight).position(buttonOffset + (buttonWidth + buttonInterval) * 3, buttonY).build()
         );
 
         // Add Done button
-        // this.addDrawableChild(new ButtonWidget(buttonOffset + (buttonWidth + buttonInterval) * 3, buttonY, buttonWidth, buttonHeight, Text.translatable("button.entity-outliner.done"), (button) -> {
+        // this.addDrawableChild(new ButtonWidget(buttonOffset + (buttonWidth + buttonInterval) * 3, buttonY, buttonWidth, buttonHeight, Text.translatable("button.re-entity-outliner.done"), (button) -> {
         //     this.client.setScreen(null);
         // }));
 
         this.addDrawableChild(
                 ButtonWidget.builder(
-                        Text.translatable("button.entity-outliner.done"),
+                        Text.translatable("button.re-entity-outliner.done"),
                         (button) -> this.client.setScreen(null)
                 ).size(buttonWidth, buttonHeight).position(buttonOffset + (buttonWidth + buttonInterval) * 4, buttonY).build()
         );
@@ -265,7 +265,7 @@ public class EntitySelector extends Screen {
 
     // Called when config screen is escaped
     public void removed() {
-        EntityOutliner.saveConfig();
+        ReEntityOutliner.saveConfig();
     }
 
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {

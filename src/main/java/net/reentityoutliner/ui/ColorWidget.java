@@ -1,4 +1,4 @@
-package net.entityoutliner.ui;
+package net.reentityoutliner.ui;
 import java.util.Map;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

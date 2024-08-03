@@ -1,33 +1,33 @@
 {
   "schemaVersion": 1,
-  "id": "entityoutliner",
+  "id": "reentityoutliner",
   "version": "${version}",
 
-  "name": "Entity Outliner",
+  "name": "Re:Entity Outliner",
   "description": "Allows you to select entity types to outline, making them visible through all obstructions within render distance.",
   "authors": [
-    "adamviola, SioGabx"
+    "SioGabx, adamviola"
   ],
   "contact": {
-    "homepage": "https://github.com/adamviola/EntityOutliner",
-    "sources": "https://github.com/adamviola/EntityOutliner"
+    "homepage": "https://modrinth.com/mod/reentityoutline",
+    "sources": "https://github.com/SioGabx/ReEntityOutliner"
   },
 
   "license": "MIT",
-  "icon": "assets/entityoutliner/icon.png",
+  "icon": "assets/reentityoutliner/icon.png",
 
   "environment": "client",
   "entrypoints": {
     "client": [
-      "net.entityoutliner.EntityOutliner"
+      "net.reentityoutliner.ReEntityOutliner"
     ],
     "modmenu": [
-      "net.entityoutliner.ui.ModMenuIntegration"
+      "net.reentityoutliner.ui.ModMenuIntegration"
     ]
   },
   "mixins": [
     {
-      "config": "entityoutliner.mixins.json",
+      "config": "reentityoutliner.mixins.json",
       "environment": "client"
     }
   ],

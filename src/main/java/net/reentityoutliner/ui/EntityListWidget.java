@@ -1,11 +1,11 @@
-package net.entityoutliner.ui;
+package net.reentityoutliner.ui;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
-import net.entityoutliner.ui.ColorWidget.Color;
+import net.reentityoutliner.ui.ColorWidget.Color;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -140,7 +140,7 @@ public class EntityListWidget extends ElementListWidget<EntityListWidget.Entry> 
                 }
                 this.title = title.toString().trim();
             } else {
-                this.title = Language.getInstance().get("gui.entity-outliner.no_results");
+                this.title = Language.getInstance().get("gui.re-entity-outliner.no_results");
             }
 
         }

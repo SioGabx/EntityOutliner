@@ -1,13 +1,13 @@
-package net.entityoutliner.mixin;
+package net.reentityoutliner.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import net.entityoutliner.EntityOutliner;
-import net.entityoutliner.ui.EntitySelector;
-import net.entityoutliner.ui.ColorWidget.Color;
+import net.reentityoutliner.ReEntityOutliner;
+import net.reentityoutliner.ui.EntitySelector;
+import net.reentityoutliner.ui.ColorWidget.Color;
 import net.minecraft.client.render.OutlineVertexConsumerProvider;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.WorldRenderer;
@@ -23,7 +23,7 @@ public abstract class MixinWorldRenderer {
 
     @Inject(method = "renderEntity", at = @At("HEAD"))
     private void renderEntity(Entity entity, double cameraX, double cameraY, double cameraZ, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, CallbackInfo ci) {
-        if (EntityOutliner.outliningEntities
+        if (ReEntityOutliner.outliningEntities
                 && vertexConsumers instanceof OutlineVertexConsumerProvider
                 && EntitySelector.outlinedEntityTypes.containsKey(entity.getType())) {
 
