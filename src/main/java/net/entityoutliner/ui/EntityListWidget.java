@@ -3,7 +3,6 @@ package net.entityoutliner.ui;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.text.Text;
 import org.apache.commons.lang3.StringUtils;
 
 import net.entityoutliner.ui.ColorWidget.Color;
@@ -41,8 +40,8 @@ public class EntityListWidget extends ElementListWidget<EntityListWidget.Entry> 
         return 400;
     }
 
-    protected int getScrollbarPositionX() {
-        return super.getScrollbarPositionX() + 32;
+    protected int getScrollbarX() {
+        return super.getScrollbarX() + 32;
     }
 
     @Environment(EnvType.CLIENT)
@@ -115,13 +114,6 @@ public class EntityListWidget extends ElementListWidget<EntityListWidget.Entry> 
             return this.children;
         }
 
-        public EntityType<?> getEntityType() {
-            return this.entityType;
-        }
-
-        public CheckboxWidget getCheckbox() {
-            return this.checkbox;
-        }
 
         public List<? extends Selectable> selectableChildren() {
             return this.children;
@@ -142,11 +134,11 @@ public class EntityListWidget extends ElementListWidget<EntityListWidget.Entry> 
             this.height = height;
 
             if (category != null) {
-                String title = "";
-                for (String term : category.getName().split("\\p{Punct}|\\p{Space}")) {
-                    title += StringUtils.capitalize(term) + " ";
+                StringBuilder title = new StringBuilder();
+                for (String term : category.getName().split("\\p{Punct}|\\s")) {
+                    title.append(StringUtils.capitalize(term)).append(" ");
                 }
-                this.title = title.trim();
+                this.title = title.toString().trim();
             } else {
                 this.title = Language.getInstance().get("gui.entity-outliner.no_results");
             }

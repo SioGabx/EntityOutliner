@@ -56,6 +56,7 @@ public class EntityOutliner implements ClientModInitializer {
         ClientTickEvents.END_CLIENT_TICK.register(this::onEndTick);
     }
 
+
     private static Path getConfigPath() {
         return FabricLoader.getInstance().getConfigDir().resolve("entityoutliner.json");
     }
@@ -85,7 +86,7 @@ public class EntityOutliner implements ClientModInitializer {
                 List<List<String>> outlinedEntityNames = GSON.fromJson(config.get("outlinedEntities"), setType);
 
                 Map<EntityType<?>, Color> outlinedEntityTypes = outlinedEntityNames.stream()
-                    .collect(Collectors.toMap(list -> EntityType.get(list.get(0)).get(), list -> Color.valueOf(list.get(1))));;
+                    .collect(Collectors.toMap(list -> EntityType.get(list.get(0)).get(), list -> Color.valueOf(list.get(1))));
 
                 for (EntityType<?> entityType : Registries.ENTITY_TYPE)
                     if (outlinedEntityTypes.containsKey(entityType))

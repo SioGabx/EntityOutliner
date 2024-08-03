@@ -4,6 +4,7 @@
     "title.entity-outliner.selector": "Sélecteur d'entités",
     "title.entity-outliner.title": "Sélecteur d'entités (Entity Outliner)",
     "button.entity-outliner.deselect": "Tout déselectionner",
+    "button.entity-outliner.select": "Tout selectionner",
     "button.entity-outliner.done": "Terminer",
     "button.entity-outliner.categories": "Catégories",
     "button.entity-outliner.no-categories": "Aucune catégories",
