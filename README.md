@@ -1,12 +1,10 @@
 Updated to 1.21 !
 
 # Availables versions
-CurseForge : https://legacy.curseforge.com/minecraft/mc-mods/re-entity-outliner
-
+CurseForge : https://legacy.curseforge.com/minecraft/mc-mods/re-entity-outliner\
 <a href="https://legacy.curseforge.com/minecraft/mc-mods/re-entity-outliner"><img alt="CurseForge page" src="https://img.shields.io/curseforge/dt/1079322?logo=curseforge"></a>
 
-Github : https://github.com/SioGabx/EntityOutliner/releases
-
+Github : https://github.com/SioGabx/EntityOutliner/releases\
 <a href="https://github.com/SioGabx/EntityOutliner/releases"><img alt="GitHub all releases" src="https://img.shields.io/github/downloads/SioGabx/EntityOutliner/total?color=%2316d68a&logo=github"></a>
 
 # Find community forks from original mod :
