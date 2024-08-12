@@ -56,7 +56,6 @@ public class ReEntityOutliner implements ClientModInitializer {
         ClientTickEvents.END_CLIENT_TICK.register(this::onEndTick);
     }
 
-
     private static Path getConfigPath() {
         return FabricLoader.getInstance().getConfigDir().resolve("reentityoutliner.json");
     }
@@ -74,7 +73,7 @@ public class ReEntityOutliner implements ClientModInitializer {
             Files.write(getConfigPath(), GSON.toJson(config).getBytes());
         }
         catch (IOException ex) {
-            logException(ex, "Failed to save reentityoutliner config");
+            logException(ex, "Failed to save ReEntityOutliner config");
         }
     }
 
@@ -86,7 +85,7 @@ public class ReEntityOutliner implements ClientModInitializer {
                 List<List<String>> outlinedEntityNames = GSON.fromJson(config.get("outlinedEntities"), setType);
 
                 Map<EntityType<?>, Color> outlinedEntityTypes = outlinedEntityNames.stream()
-                    .collect(Collectors.toMap(list -> EntityType.get(list.get(0)).get(), list -> Color.valueOf(list.get(1))));
+                    .collect(Collectors.toMap(list -> EntityType.get(list.get(0)).get(), list -> Color.valueOf(list.get(1))));;
 
                 for (EntityType<?> entityType : Registries.ENTITY_TYPE)
                     if (outlinedEntityTypes.containsKey(entityType))
@@ -94,7 +93,7 @@ public class ReEntityOutliner implements ClientModInitializer {
             }
         }
         catch (IOException | JsonSyntaxException ex) {
-            logException(ex, "Failed to load reentityoutliner config");
+            logException(ex, "Failed to load ReEntityOutliner config");
         }
     }
 
@@ -109,6 +108,6 @@ public class ReEntityOutliner implements ClientModInitializer {
     }
 
     public static void logException(Exception ex, String message) {
-        System.err.printf("[reentityoutliner] %s (%s: %s)", message, ex.getClass().getSimpleName(), ex.getLocalizedMessage());
+        System.err.printf("[ReEntityOutliner] %s (%s: %s)", message, ex.getClass().getSimpleName(), ex.getLocalizedMessage());
     }
 }

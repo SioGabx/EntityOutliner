@@ -16,8 +16,7 @@ import net.minecraft.entity.SpawnGroup;
 import net.minecraft.entity.EntityType;
 import net.minecraft.text.Text;
 import net.minecraft.registry.Registries;
-import net.minecraft.entity.EntityData;
-import net.minecraft.entity.attribute.EntityAttributes;
+
 public class EntitySelector extends Screen {
     protected final Screen parent;
 
@@ -27,19 +26,22 @@ public class EntitySelector extends Screen {
     private static String searchText = "";
     public static HashMap<String, List<EntityType<?>>> searcher; // Prefix -> arr of results
     public static HashMap<EntityType<?>, Color> outlinedEntityTypes = new HashMap<>();
-
+ 
     public EntitySelector(Screen parent) {
-        super(Text.translatable("title.re-entity-outliner.selector"));
-        this.parent = parent;
+       super(Text.translatable("title.re-entity-outliner.selector"));
+       this.parent = parent;
     }
-
+ 
+    public void onClose() {
+        this.client.setScreen(this.parent);
+    }
 
     protected void init() {
         if (searcher == null) {
             initializePrefixTree();
         }
-        int margin = 35;
-        this.list = new EntityListWidget(this.client, this.width, this.height - margin * 2, margin, 25);
+
+        this.list = new EntityListWidget(this.client, this.width, this.height, 32, this.height - 32, 25);
         this.addSelectableChild(list);
 
         // Create search field
@@ -51,69 +53,58 @@ public class EntitySelector extends Screen {
         // Create buttons
         int buttonWidth = 80;
         int buttonHeight = 20;
-        int numberOfButtonOnInterface = 5;
-        int buttonInterval = (this.width - 4 * buttonWidth) / (numberOfButtonOnInterface + 1);
+        int buttonInterval = (this.width - 4 * buttonWidth) / 5;
         int buttonOffset = buttonInterval;
         int buttonY = this.height - 16 - (buttonHeight / 2);
 
+        // Add sort type button
+        // this.addDrawableChild(new ButtonWidget(buttonOffset, buttonY, buttonWidth, buttonHeight, Text.translatable(groupByCategory ? "button.re-entity-outliner.categories" : "button.re-entity-outliner.no-categories"), (button) -> {
+        //     groupByCategory = !groupByCategory;
+        //     this.onSearchFieldUpdate(this.searchField.getText());
+        //     button.setMessage(Text.translatable(groupByCategory ? "button.re-entity-outliner.categories" : "button.re-entity-outliner.no-categories"));
+        // }));
+
         this.addDrawableChild(
-                ButtonWidget.builder(
-                        Text.translatable(groupByCategory ? "button.re-entity-outliner.categories" : "button.re-entity-outliner.no-categories"),
-                        (button) -> {
-                            groupByCategory = !groupByCategory;
-                            this.onSearchFieldUpdate(this.searchField.getText());
-                            button.setMessage(Text.translatable(groupByCategory ? "button.re-entity-outliner.categories" : "button.re-entity-outliner.no-categories"));
-                        }
-                ).size(buttonWidth, buttonHeight).position(buttonOffset, buttonY).build()
+            ButtonWidget.builder(
+                Text.translatable(groupByCategory ? "button.re-entity-outliner.categories" : "button.re-entity-outliner.no-categories"),
+                (button) -> {
+                    groupByCategory = !groupByCategory;
+                    this.onSearchFieldUpdate(this.searchField.getText());
+                    button.setMessage(Text.translatable(groupByCategory ? "button.re-entity-outliner.categories" : "button.re-entity-outliner.no-categories"));
+                }
+            ).size(buttonWidth, buttonHeight).position(buttonOffset, buttonY).build()
         );
 
+        // Add Deselect All button
+        // this.addDrawableChild(new ButtonWidget(buttonOffset + (buttonWidth + buttonInterval), buttonY, buttonWidth, buttonHeight, Text.translatable("button.re-entity-outliner.deselect"), (button) -> {
+        //     outlinedEntityTypes.clear();
+        //     this.onSearchFieldUpdate(this.searchField.getText());
+        // }));
 
         this.addDrawableChild(
-                ButtonWidget.builder(
-                        Text.translatable("button.re-entity-outliner.deselect"),
-                        (button) -> {
-                            String text = this.searchField.getText();
-                            if (searcher.containsKey(text)) {
-                                List<EntityType<?>> results = searcher.get(text);
-                                for (EntityType<?> entityType : results) {
-                                    outlinedEntityTypes.remove(entityType);
-                                }
-                            }
-
-                            //outlinedEntityTypes.clear();
-                            this.onSearchFieldUpdate(this.searchField.getText());
-                        }
-                ).size(buttonWidth, buttonHeight).position(buttonOffset + (buttonWidth + buttonInterval), buttonY).build()
+            ButtonWidget.builder(
+                Text.translatable("button.re-entity-outliner.deselect"),
+                (button) -> {
+                    outlinedEntityTypes.clear();
+                    this.onSearchFieldUpdate(this.searchField.getText());
+                }
+            ).size(buttonWidth, buttonHeight).position(buttonOffset + (buttonWidth + buttonInterval), buttonY).build()
         );
 
+        // Add toggle outlining button
+        // this.addDrawableChild(new ButtonWidget(buttonOffset + (buttonWidth + buttonInterval) * 2, buttonY, buttonWidth, buttonHeight, Text.translatable(ReEntityOutliner.outliningEntities ? "button.re-entity-outliner.on" : "button.re-entity-outliner.off"), (button) -> {
+        //     ReEntityOutliner.outliningEntities = !ReEntityOutliner.outliningEntities;
+        //     button.setMessage(Text.translatable(ReEntityOutliner.outliningEntities ? "button.re-entity-outliner.on" : "button.re-entity-outliner.off"));
+        // }));
 
         this.addDrawableChild(
-                ButtonWidget.builder(
-                        Text.translatable("button.re-entity-outliner.select"),
-                        (button) -> {
-                            String text = this.searchField.getText();
-                            if (searcher.containsKey(text)) {
-                                List<EntityType<?>> results = searcher.get(text);
-                                for (EntityType<?> entityType : results) {
-                                    if (!outlinedEntityTypes.containsKey(entityType)) {
-                                        Color entityColor = Color.of(entityType.getSpawnGroup());
-                                        outlinedEntityTypes.put(entityType, entityColor);
-
-                                    }
-                                }
-                            }
-                            this.onSearchFieldUpdate(this.searchField.getText());
-                        }
-                ).size(buttonWidth, buttonHeight).position(buttonOffset + (buttonWidth + buttonInterval) * 2, buttonY).build()
-        );
-        this.addDrawableChild(
-                ButtonWidget.builder(
-                        Text.translatable(ReEntityOutliner.outliningEntities ? "button.re-entity-outliner.on" : "button.re-entity-outliner.off"),
-                        (button) -> {
-                            ReEntityOutliner.outliningEntities = !ReEntityOutliner.outliningEntities;
-                            button.setMessage(Text.translatable(ReEntityOutliner.outliningEntities ? "button.re-entity-outliner.on" : "button.re-entity-outliner.off"));
-                        }
-                ).size(buttonWidth, buttonHeight).position(buttonOffset + (buttonWidth + buttonInterval) * 3, buttonY).build()
+            ButtonWidget.builder(
+                Text.translatable(ReEntityOutliner.outliningEntities ? "button.re-entity-outliner.on" : "button.re-entity-outliner.off"),
+                (button) -> {
+                    ReEntityOutliner.outliningEntities = !ReEntityOutliner.outliningEntities;
+                    button.setMessage(Text.translatable(ReEntityOutliner.outliningEntities ? "button.re-entity-outliner.on" : "button.re-entity-outliner.off"));
+                }
+            ).size(buttonWidth, buttonHeight).position(buttonOffset + (buttonWidth + buttonInterval) * 2, buttonY).build()
         );
 
         // Add Done button
@@ -122,12 +113,12 @@ public class EntitySelector extends Screen {
         // }));
 
         this.addDrawableChild(
-                ButtonWidget.builder(
-                        Text.translatable("button.re-entity-outliner.done"),
-                        (button) -> this.client.setScreen(null)
-                ).size(buttonWidth, buttonHeight).position(buttonOffset + (buttonWidth + buttonInterval) * 4, buttonY).build()
+            ButtonWidget.builder(
+                Text.translatable("button.re-entity-outliner.done"),
+                (button) -> { this.client.setScreen(null); }
+            ).size(buttonWidth, buttonHeight).position(buttonOffset + (buttonWidth + buttonInterval) * 3, buttonY).build()
         );
-
+        
         this.setInitialFocus(this.searchField);
         this.onSearchFieldUpdate(this.searchField.getText());
     }
@@ -137,7 +128,7 @@ public class EntitySelector extends Screen {
         EntitySelector.searcher = new HashMap<>();
 
         // Initialize no-text results
-        List<EntityType<?>> allResults = new ArrayList<>();
+        List<EntityType<?>> allResults =  new ArrayList<EntityType<?>>();
         EntitySelector.searcher.put("", allResults);
 
         // Get sorted list of entity types
@@ -151,7 +142,7 @@ public class EntitySelector extends Screen {
                 return o1.getName().getString().compareTo(o2.getName().getString());
             }
         });
-
+        
         // Add each entity type to everywhere it belongs in the prefix "tree"
         for (EntityType<?> entityType : entityTypes) {
 
@@ -190,7 +181,6 @@ public class EntitySelector extends Screen {
         }
     }
 
-
     // Callback provided to TextFieldWidget triggered when its text updates
     private void onSearchFieldUpdate(String text) {
         searchText = text;
@@ -200,7 +190,7 @@ public class EntitySelector extends Screen {
 
         if (searcher.containsKey(text)) {
             List<EntityType<?>> results = searcher.get(text);
-
+            
             // Splits results into categories and separates them with headers
             if (groupByCategory) {
                 HashMap<SpawnGroup, List<EntityType<?>>> resultsByCategory = new HashMap<>();
@@ -222,7 +212,7 @@ public class EntitySelector extends Screen {
                             this.list.addListEntry(EntityListWidget.EntityEntry.create(entityType, this.width));
                         }
 
-                    }
+                    }      
                 }
 
             } else {
@@ -243,17 +233,24 @@ public class EntitySelector extends Screen {
         ReEntityOutliner.saveConfig();
     }
 
+    public void tick() {
+        //this.searchField.tick();
+    }
+
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+
         // Render buttons
         super.render(context, mouseX, mouseY, delta);
+
         // Render scrolling list
         this.list.render(context, mouseX, mouseY, delta);
+
         // Render our search bar
         this.setFocused(this.searchField);
         //this.searchField.setTextFieldFocused(true);
         this.searchField.render(context, mouseX, mouseY, delta);
-    }
 
+    }
 
     // Sends mouseDragged event to the scrolling list
     public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {

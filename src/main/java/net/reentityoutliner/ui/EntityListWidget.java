@@ -23,8 +23,8 @@ import net.minecraft.util.Language;
 @Environment(EnvType.CLIENT)
 public class EntityListWidget extends ElementListWidget<EntityListWidget.Entry> {
 
-    public EntityListWidget(MinecraftClient client, int width, int height, int top,int itemHeight) {
-        super(client, width, height, top, itemHeight);
+    public EntityListWidget(MinecraftClient client, int width, int height, int top, int bottom, int itemHeight) {
+        super(client, width, height, top, bottom, itemHeight);
         this.centerListVertically = false;
     }
 
@@ -40,8 +40,8 @@ public class EntityListWidget extends ElementListWidget<EntityListWidget.Entry> 
         return 400;
     }
 
-    protected int getScrollbarX() {
-        return super.getScrollbarX() + 32;
+    protected int getScrollbarPositionX() {
+        return super.getScrollbarPositionX() + 32;
     }
 
     @Environment(EnvType.CLIENT)
@@ -66,18 +66,12 @@ public class EntityListWidget extends ElementListWidget<EntityListWidget.Entry> 
         }
 
         public static EntityListWidget.EntityEntry create(EntityType<?> entityType, int width) {
-
             return new EntityListWidget.EntityEntry(
-                    CheckboxWidget
-                            .builder(entityType.getName(), MinecraftClient.getInstance().textRenderer)
-                            .pos(width / 2 - 155, 0)
-                            .checked(EntitySelector.outlinedEntityTypes.containsKey(entityType)).build(),
-                new ColorWidget(width / 2 + 75, 0, 75, 20, entityType),
-                entityType
+                    new CheckboxWidget(width / 2 - 155, 0, 310, 20, entityType.getName(), EntitySelector.outlinedEntityTypes.containsKey(entityType)),
+                    new ColorWidget(width / 2 + 75, 0, 75, 20, entityType),
+                    entityType
             );
         }
-        //new CheckboxWidget(width / 2 - 155, 0,  entityType.getName(), textRender, EntitySelector.outlinedEntityTypes.containsKey(entityType), null),
-
 
         public void render(DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
             this.checkbox.setY(y);
@@ -114,6 +108,13 @@ public class EntityListWidget extends ElementListWidget<EntityListWidget.Entry> 
             return this.children;
         }
 
+        public EntityType<?> getEntityType() {
+            return this.entityType;
+        }
+
+        public CheckboxWidget getCheckbox() {
+            return this.checkbox;
+        }
 
         public List<? extends Selectable> selectableChildren() {
             return this.children;
@@ -134,11 +135,11 @@ public class EntityListWidget extends ElementListWidget<EntityListWidget.Entry> 
             this.height = height;
 
             if (category != null) {
-                StringBuilder title = new StringBuilder();
-                for (String term : category.getName().split("\\p{Punct}|\\s")) {
-                    title.append(StringUtils.capitalize(term)).append(" ");
+                String title = "";
+                for (String term : category.getName().split("\\p{Punct}|\\p{Space}")) {
+                    title += StringUtils.capitalize(term) + " ";
                 }
-                this.title = title.toString().trim();
+                this.title = title.trim();
             } else {
                 this.title = Language.getInstance().get("gui.re-entity-outliner.no_results");
             }

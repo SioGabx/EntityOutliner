@@ -16,10 +16,9 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.scoreboard.AbstractTeam;
-/**/
+
 @Mixin(WorldRenderer.class)
 public abstract class MixinWorldRenderer {
-
 
     @Inject(method = "renderEntity", at = @At("HEAD"))
     private void renderEntity(Entity entity, double cameraX, double cameraY, double cameraZ, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, CallbackInfo ci) {
@@ -35,15 +34,13 @@ public abstract class MixinWorldRenderer {
                 PlayerEntity player = (PlayerEntity) entity;
                 AbstractTeam team = player.getScoreboardTeam();
                 if (team != null && team.getColor().getColorValue() != null) {
-                    int argbInt = team.getColor().getColorValue();
-                    int alpha = (argbInt >> 24) & 0xFF;
-                    int red = (argbInt >> 16) & 0xFF;
-                    int green = (argbInt >> 8) & 0xFF;
-                    int blue = argbInt & 0xFF;
-                    outlineVertexConsumers.setColor(red, green, blue, alpha);
+                    int hexColor = team.getColor().getColorValue();
+                    int blue = hexColor % 256;
+                    int green = (hexColor / 256) % 256;
+                    int red = (hexColor / 65536) % 256;
+                    outlineVertexConsumers.setColor(red, green, blue, 255);
                 }
             }
         }
-
     }
 }

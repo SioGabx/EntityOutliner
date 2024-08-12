@@ -6,10 +6,10 @@
   "name": "Re:Entity Outliner",
   "description": "Allows you to select entity types to outline, making them visible through all obstructions within render distance.",
   "authors": [
-    "SioGabx, adamviola"
+    "SioGabx", "adamviola"
   ],
   "contact": {
-    "homepage": "https://modrinth.com/mod/reentityoutline",
+    "homepage": "https://github.com/SioGabx/ReEntityOutliner",
     "sources": "https://github.com/SioGabx/ReEntityOutliner"
   },
 
@@ -33,7 +33,7 @@
   ],
 
   "depends": {
-    "fabricloader": ">=0.15.3",
+    "fabricloader": ">=0.7.4",
     "fabric": "*",
     "fabric-lifecycle-events-v1": "*",
     "fabric-key-binding-api-v1": "*",

@@ -1,14 +1,14 @@
 Updated to 1.21 !
 
 # Availables versions
-CurseForge : https://legacy.curseforge.com/minecraft/mc-mods/re-entity-outliner   \
-<a href="https://legacy.curseforge.com/minecraft/mc-mods/re-entity-outliner"><img alt="CurseForge page" src="https://img.shields.io/curseforge/dt/1079322?logo=curseforge"></a>
+CurseForge : https://legacy.curseforge.com/minecraft/mc-mods/re-re-entity-outliner   \
+<a href="https://legacy.curseforge.com/minecraft/mc-mods/re-re-entity-outliner"><img alt="CurseForge page" src="https://img.shields.io/curseforge/dt/1079322?logo=curseforge"></a>
 
-Github : https://github.com/SioGabx/EntityOutliner/releases   \
-<a href="https://github.com/SioGabx/EntityOutliner/releases"><img alt="GitHub all releases" src="https://img.shields.io/github/downloads/SioGabx/EntityOutliner/total?color=%2316d68a&logo=github"></a>
+Github : https://github.com/SioGabx/ReEntityOutliner/releases   \
+<a href="https://github.com/SioGabx/ReEntityOutliner/releases"><img alt="GitHub all releases" src="https://img.shields.io/github/downloads/SioGabx/ReEntityOutliner/total?color=%2316d68a&logo=github"></a>
 
 # Find community forks from original mod :
-https://github.com/adamviola/EntityOutliner/forks?include=active&page=1&period=2y&sort_by=last_updated
+https://github.com/adamviola/ReEntityOutliner/forks?include=active&page=1&period=2y&sort_by=last_updated
 
 # Entity Outliner
 Re:Entity Outliner is a clientside mod that allows you to select entity types to outline, making them visible through obstructions at any distance.

@@ -1,5 +1,10 @@
 package net.reentityoutliner.ui;
+
 import java.util.Map;
+
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -9,11 +14,12 @@ import net.minecraft.client.gui.widget.PressableWidget;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 
 @Environment(EnvType.CLIENT)
 public class ColorWidget extends PressableWidget {
     private Color color;
-    private final EntityType<?> entityType;
+    private EntityType<?> entityType;
 
     private ColorWidget(int x, int y, int width, int height, Text message, EntityType<?> entityType) {
         super(x, y, width, height, message);
@@ -36,18 +42,13 @@ public class ColorWidget extends PressableWidget {
         EntitySelector.outlinedEntityTypes.put(this.entityType, this.color);
     }
 
-    @Override
-    protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
+    public void renderButton(DrawContext context, int mouseX, int mouseY, float delta) {
         MinecraftClient minecraftClient = MinecraftClient.getInstance();
-        super.renderWidget(context, mouseX, mouseY, delta);
+        super.renderButton(context, mouseX, mouseY, delta);
         int color = (this.color.red << 16) | (this.color.green << 8) | this.color.blue;
         this.setMessage(this.color.colorName);
         this.drawMessage(context, minecraftClient.textRenderer, color);
     }
-
-
-
-
 
     public enum Color {
         WHITE(255, 255, 255, Text.of("WHITE")),
@@ -60,10 +61,11 @@ public class ColorWidget extends PressableWidget {
         PURPLE(127, 0, 127, Text.of("PURPLE")),
         PINK(255, 155, 182, Text.of("PINK"));
 
-        public final int red;
-        public final int green;
-        public final int blue;
-        public final Text colorName;
+
+        public int red;
+        public int green;
+        public int blue;
+        public Text colorName;
 
         private static final Map<SpawnGroup, Color> spawnGroupColors = Map.of(
             SpawnGroup.AMBIENT, Color.PURPLE,
@@ -76,7 +78,7 @@ public class ColorWidget extends PressableWidget {
             SpawnGroup.WATER_CREATURE, Color.BLUE
         );
 
-        private static final Color[] colors = Color.values();
+        private static Color[] colors = Color.values();
 
         Color(int red, int green, int blue, Text colorName) {
             this.red = red;
