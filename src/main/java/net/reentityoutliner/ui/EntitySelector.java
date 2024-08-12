@@ -16,7 +16,8 @@ import net.minecraft.entity.SpawnGroup;
 import net.minecraft.entity.EntityType;
 import net.minecraft.text.Text;
 import net.minecraft.registry.Registries;
-
+import net.minecraft.entity.EntityData;
+import net.minecraft.entity.attribute.EntityAttributes;
 public class EntitySelector extends Screen {
     protected final Screen parent;
 
@@ -55,13 +56,6 @@ public class EntitySelector extends Screen {
         int buttonOffset = buttonInterval;
         int buttonY = this.height - 16 - (buttonHeight / 2);
 
-        // Add sort type button
-        // this.addDrawableChild(new ButtonWidget(buttonOffset, buttonY, buttonWidth, buttonHeight, Text.translatable(groupByCategory ? "button.re-entity-outliner.categories" : "button.re-entity-outliner.no-categories"), (button) -> {
-        //     groupByCategory = !groupByCategory;
-        //     this.onSearchFieldUpdate(this.searchField.getText());
-        //     button.setMessage(Text.translatable(groupByCategory ? "button.re-entity-outliner.categories" : "button.re-entity-outliner.no-categories"));
-        // }));
-
         this.addDrawableChild(
                 ButtonWidget.builder(
                         Text.translatable(groupByCategory ? "button.re-entity-outliner.categories" : "button.re-entity-outliner.no-categories"),
@@ -73,11 +67,6 @@ public class EntitySelector extends Screen {
                 ).size(buttonWidth, buttonHeight).position(buttonOffset, buttonY).build()
         );
 
-        // Add Deselect All button
-        // this.addDrawableChild(new ButtonWidget(buttonOffset + (buttonWidth + buttonInterval), buttonY, buttonWidth, buttonHeight, Text.translatable("button.re-entity-outliner.deselect"), (button) -> {
-        //     outlinedEntityTypes.clear();
-        //     this.onSearchFieldUpdate(this.searchField.getText());
-        // }));
 
         this.addDrawableChild(
                 ButtonWidget.builder(
@@ -117,20 +106,6 @@ public class EntitySelector extends Screen {
                         }
                 ).size(buttonWidth, buttonHeight).position(buttonOffset + (buttonWidth + buttonInterval) * 2, buttonY).build()
         );
-        /*
-        List<EntityType<?>> entityTypes = new ArrayList<>();
-        for (EntityType<?> entityType : Registries.ENTITY_TYPE) {
-            entityTypes.add(entityType);
-        }
-
-        */
-
-        // Add toggle outlining button
-        // this.addDrawableChild(new ButtonWidget(buttonOffset + (buttonWidth + buttonInterval) * 2, buttonY, buttonWidth, buttonHeight, Text.translatable(reentityoutliner.outliningEntities ? "button.re-entity-outliner.on" : "button.re-entity-outliner.off"), (button) -> {
-        //     reentityoutliner.outliningEntities = !reentityoutliner.outliningEntities;
-        //     button.setMessage(Text.translatable(reentityoutliner.outliningEntities ? "button.re-entity-outliner.on" : "button.re-entity-outliner.off"));
-        // }));
-
         this.addDrawableChild(
                 ButtonWidget.builder(
                         Text.translatable(ReEntityOutliner.outliningEntities ? "button.re-entity-outliner.on" : "button.re-entity-outliner.off"),
