@@ -16,13 +16,12 @@ import net.minecraft.entity.SpawnGroup;
 import net.minecraft.entity.EntityType;
 import net.minecraft.text.Text;
 import net.minecraft.registry.Registries;
-import net.minecraft.entity.EntityData;
-import net.minecraft.entity.attribute.EntityAttributes;
+
 public class EntitySelector extends Screen {
     protected final Screen parent;
 
     private TextFieldWidget searchField;
-    private EntityListWidget list;
+    public static EntityListWidget list;
     public static boolean groupByCategory = true;
     private static String searchText = "";
     public static HashMap<String, List<EntityType<?>>> searcher; // Prefix -> arr of results
@@ -39,7 +38,7 @@ public class EntitySelector extends Screen {
             initializePrefixTree();
         }
         int margin = 35;
-        this.list = new EntityListWidget(this.client, this.width, this.height - margin * 2, margin, 25);
+        list = new EntityListWidget(this.client, this.width, this.height - margin * 2, margin, 25);
         this.addSelectableChild(list);
 
         // Create search field
@@ -52,8 +51,7 @@ public class EntitySelector extends Screen {
         int buttonWidth = 80;
         int buttonHeight = 20;
         int numberOfButtonOnInterface = 5;
-        int buttonInterval = (this.width - 4 * buttonWidth) / (numberOfButtonOnInterface + 1);
-        int buttonOffset = buttonInterval;
+        int buttonInterval = (this.width - numberOfButtonOnInterface * buttonWidth) / (numberOfButtonOnInterface + 1);
         int buttonY = this.height - 16 - (buttonHeight / 2);
 
         this.addDrawableChild(
@@ -64,7 +62,7 @@ public class EntitySelector extends Screen {
                             this.onSearchFieldUpdate(this.searchField.getText());
                             button.setMessage(Text.translatable(groupByCategory ? "button.re-entity-outliner.categories" : "button.re-entity-outliner.no-categories"));
                         }
-                ).size(buttonWidth, buttonHeight).position(buttonOffset, buttonY).build()
+                ).size(buttonWidth, buttonHeight).position(buttonInterval, buttonY).build()
         );
 
 
@@ -83,7 +81,7 @@ public class EntitySelector extends Screen {
                             //outlinedEntityTypes.clear();
                             this.onSearchFieldUpdate(this.searchField.getText());
                         }
-                ).size(buttonWidth, buttonHeight).position(buttonOffset + (buttonWidth + buttonInterval), buttonY).build()
+                ).size(buttonWidth, buttonHeight).position(buttonInterval + (buttonWidth + buttonInterval), buttonY).build()
         );
 
 
@@ -104,7 +102,7 @@ public class EntitySelector extends Screen {
                             }
                             this.onSearchFieldUpdate(this.searchField.getText());
                         }
-                ).size(buttonWidth, buttonHeight).position(buttonOffset + (buttonWidth + buttonInterval) * 2, buttonY).build()
+                ).size(buttonWidth, buttonHeight).position(buttonInterval + (buttonWidth + buttonInterval) * 2, buttonY).build()
         );
         this.addDrawableChild(
                 ButtonWidget.builder(
@@ -113,19 +111,15 @@ public class EntitySelector extends Screen {
                             ReEntityOutliner.outliningEntities = !ReEntityOutliner.outliningEntities;
                             button.setMessage(Text.translatable(ReEntityOutliner.outliningEntities ? "button.re-entity-outliner.on" : "button.re-entity-outliner.off"));
                         }
-                ).size(buttonWidth, buttonHeight).position(buttonOffset + (buttonWidth + buttonInterval) * 3, buttonY).build()
+                ).size(buttonWidth, buttonHeight).position(buttonInterval + (buttonWidth + buttonInterval) * 3, buttonY).build()
         );
 
-        // Add Done button
-        // this.addDrawableChild(new ButtonWidget(buttonOffset + (buttonWidth + buttonInterval) * 3, buttonY, buttonWidth, buttonHeight, Text.translatable("button.re-entity-outliner.done"), (button) -> {
-        //     this.client.setScreen(null);
-        // }));
 
         this.addDrawableChild(
                 ButtonWidget.builder(
                         Text.translatable("button.re-entity-outliner.done"),
                         (button) -> this.client.setScreen(null)
-                ).size(buttonWidth, buttonHeight).position(buttonOffset + (buttonWidth + buttonInterval) * 4, buttonY).build()
+                ).size(buttonWidth, buttonHeight).position(buttonInterval + (buttonWidth + buttonInterval) * 4, buttonY).build()
         );
 
         this.setInitialFocus(this.searchField);
@@ -145,12 +139,7 @@ public class EntitySelector extends Screen {
         for (EntityType<?> entityType : Registries.ENTITY_TYPE) {
             entityTypes.add(entityType);
         }
-        entityTypes.sort(new Comparator<EntityType<?>>() {
-            @Override
-            public int compare(EntityType<?> o1, EntityType<?> o2) {
-                return o1.getName().getString().compareTo(o2.getName().getString());
-            }
-        });
+        entityTypes.sort(Comparator.comparing(o -> o.getName().getString()));
 
         // Add each entity type to everywhere it belongs in the prefix "tree"
         for (EntityType<?> entityType : entityTypes) {
@@ -175,7 +164,7 @@ public class EntitySelector extends Screen {
                     if (EntitySelector.searcher.containsKey(prefix)) {
                         results = EntitySelector.searcher.get(prefix);
                     } else {
-                        results = new ArrayList<EntityType<?>>();
+                        results = new ArrayList<>();
                         EntitySelector.searcher.put(prefix, results);
                     }
 
@@ -196,7 +185,7 @@ public class EntitySelector extends Screen {
         searchText = text;
         text = text.toLowerCase().trim();
 
-        this.list.clearListEntries();
+        list.clearListEntries();
 
         if (searcher.containsKey(text)) {
             List<EntityType<?>> results = searcher.get(text);
@@ -216,10 +205,10 @@ public class EntitySelector extends Screen {
 
                 for (SpawnGroup category : SpawnGroup.values()) {
                     if (resultsByCategory.containsKey(category)) {
-                        this.list.addListEntry(EntityListWidget.HeaderEntry.create(category, this.client.textRenderer, this.width, 25));
+                        list.addListEntry(EntityListWidget.HeaderEntry.create(category, this.client.textRenderer, this.width, 25));
 
                         for (EntityType<?> entityType : resultsByCategory.get(category)) {
-                            this.list.addListEntry(EntityListWidget.EntityEntry.create(entityType, this.width));
+                            list.addListEntry(EntityListWidget.EntityEntry.create(entityType, this.width));
                         }
 
                     }
@@ -227,15 +216,15 @@ public class EntitySelector extends Screen {
 
             } else {
                 for (EntityType<?> entityType : results) {
-                    this.list.addListEntry(EntityListWidget.EntityEntry.create(entityType, this.width));
+                    list.addListEntry(EntityListWidget.EntityEntry.create(entityType, this.width));
                 }
             }
         } else { // If there are no results, let the user know
-            this.list.addListEntry(EntityListWidget.HeaderEntry.create(null, this.client.textRenderer, this.width, 25));
+            list.addListEntry(EntityListWidget.HeaderEntry.create(null, this.client.textRenderer, this.width, 25));
         }
 
         // This prevents an overscroll when the user is already scrolled down and the results list is shortened
-        this.list.setScrollAmount(this.list.getScrollAmount());
+        list.setScrollAmount(list.getScrollAmount());
     }
 
     // Called when config screen is escaped
@@ -247,7 +236,7 @@ public class EntitySelector extends Screen {
         // Render buttons
         super.render(context, mouseX, mouseY, delta);
         // Render scrolling list
-        this.list.render(context, mouseX, mouseY, delta);
+        list.render(context, mouseX, mouseY, delta);
         // Render our search bar
         this.setFocused(this.searchField);
         //this.searchField.setTextFieldFocused(true);
@@ -257,6 +246,6 @@ public class EntitySelector extends Screen {
 
     // Sends mouseDragged event to the scrolling list
     public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
-        return this.list.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
+        return list.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
     }
 }

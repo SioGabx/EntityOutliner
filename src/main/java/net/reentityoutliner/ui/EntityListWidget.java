@@ -20,10 +20,35 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.util.Language;
 
+
 @Environment(EnvType.CLIENT)
 public class EntityListWidget extends ElementListWidget<EntityListWidget.Entry> {
 
-    public EntityListWidget(MinecraftClient client, int width, int height, int top,int itemHeight) {
+    /*@Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (button == 0) {
+            System.out.println("Category clicked!");
+            Entry focusedEntry = this.getHoveredEntry(); // Récupère l'entrée actuellement sélectionnée
+
+            if (focusedEntry instanceof HeaderEntry) {
+                // Cast l'entrée en HeaderEntry pour accéder à la catégorie
+                HeaderEntry headerEntry = (HeaderEntry) focusedEntry;
+                SpawnGroup clickedSpawnGp = headerEntry.spawnGp;
+
+                for (Map.Entry<String, List<EntityType<?>>> entry : EntitySelector.searcher.entrySet()) {
+                    for (EntityType<?> entityType : entry.getValue()) {
+                        if (clickedSpawnGp == entityType.getSpawnGroup()) {
+                            Color entityColor = Color.of(clickedSpawnGp);
+                            EntitySelector.outlinedEntityTypes.put(entityType, entityColor);
+                        }
+                    }
+                }
+            }
+        }
+        return super.mouseClicked(mouseX, mouseY, button);
+    }
+*/
+    public EntityListWidget(MinecraftClient client, int width, int height, int top, int itemHeight) {
         super(client, width, height, top, itemHeight);
         this.centerListVertically = false;
     }
@@ -45,7 +70,8 @@ public class EntityListWidget extends ElementListWidget<EntityListWidget.Entry> 
     }
 
     @Environment(EnvType.CLIENT)
-    public static abstract class Entry extends ElementListWidget.Entry<EntityListWidget.Entry> { }
+    public static abstract class Entry extends ElementListWidget.Entry<EntityListWidget.Entry> {
+    }
 
     @Environment(EnvType.CLIENT)
     public static class EntityEntry extends EntityListWidget.Entry {
@@ -72,8 +98,8 @@ public class EntityListWidget extends ElementListWidget<EntityListWidget.Entry> 
                             .builder(entityType.getName(), MinecraftClient.getInstance().textRenderer)
                             .pos(width / 2 - 155, 0)
                             .checked(EntitySelector.outlinedEntityTypes.containsKey(entityType)).build(),
-                new ColorWidget(width / 2 + 75, 0, 75, 20, entityType),
-                entityType
+                    new ColorWidget(width / 2 + 75, 0, 75, 20, entityType),
+                    entityType
             );
         }
         //new CheckboxWidget(width / 2 - 155, 0,  entityType.getName(), textRender, EntitySelector.outlinedEntityTypes.containsKey(entityType), null),
@@ -127,18 +153,45 @@ public class EntityListWidget extends ElementListWidget<EntityListWidget.Entry> 
         private final String title;
         private final int width;
         private final int height;
+        private final SpawnGroup spawnGp;
+
+        @Override
+        public boolean mouseClicked(double mouseX, double mouseY, int button) {
+            if (button == 0) {
+                System.out.println("Category clicked!");
+                var AllAlreadySelected = true;
+                for (int i = 0; i < 2; i++) {
+                    for (EntityListWidget.Entry entry : EntitySelector.list.children()) {
+                        if (entry instanceof EntityListWidget.EntityEntry entityEntry) {
+                            if (entityEntry.entityType.getSpawnGroup() == spawnGp) {
+                                if ((!entityEntry.checkbox.isChecked() && i == 0) || (entityEntry.checkbox.isChecked() && i == 1)) {
+                                    AllAlreadySelected = false;
+                                    entityEntry.mouseClicked(mouseX, mouseY, button);
+                                }
+                            }
+                        }
+                    }
+                    if (!AllAlreadySelected) {
+                        break;
+                    }
+                }
+            }
+            return super.mouseClicked(mouseX, mouseY, button);
+        }
+
 
         private HeaderEntry(SpawnGroup category, TextRenderer font, int width, int height) {
             this.font = font;
             this.width = width;
             this.height = height;
-
+            this.spawnGp = category;
             if (category != null) {
                 StringBuilder title = new StringBuilder();
                 for (String term : category.getName().split("\\p{Punct}|\\s")) {
                     title.append(StringUtils.capitalize(term)).append(" ");
                 }
                 this.title = title.toString().trim();
+
             } else {
                 this.title = Language.getInstance().get("gui.re-entity-outliner.no_results");
             }
@@ -160,6 +213,7 @@ public class EntityListWidget extends ElementListWidget<EntityListWidget.Entry> 
         public String toString() {
             return this.title;
         }
+
 
         @Override
         public List<? extends Selectable> selectableChildren() {
