@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -87,12 +88,29 @@ public class ReEntityOutliner implements ClientModInitializer {
                 /*Map<EntityType<?>, Color> outlinedEntityTypes = outlinedEntityNames.stream()
                     .collect(Collectors.toMap(list -> EntityType.get(list.getFirst()).get(), list -> Color.valueOf(list.get(1))));
 **/
+                /*
                 Map<EntityType<?>, Color> outlinedEntityTypes = outlinedEntityNames.stream()
+
                         .collect(Collectors.toMap(
                                 list -> EntityType.get(list.getFirst())
                                         .orElseThrow(() -> new IllegalArgumentException("Invalid entity type: " + list.getFirst())),
                                 list -> Color.valueOf(list.get(1))
                         ));
+*/
+
+
+                Map<EntityType<?>, Color> outlinedEntityTypes = outlinedEntityNames.stream()
+                        .map(list -> {
+                            Optional<EntityType<?>> entityTypeOptional = EntityType.get(list.getFirst());
+                            if (entityTypeOptional.isEmpty()) {
+                                System.err.printf("[reentityoutliner] Invalid entity type: " + list.getFirst());
+                            }
+                            return entityTypeOptional.map(entityType -> Map.entry(entityType, Color.valueOf(list.get(1))));
+                        })
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
+                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
 
                 for (EntityType<?> entityType : Registries.ENTITY_TYPE)
                     if (outlinedEntityTypes.containsKey(entityType))
