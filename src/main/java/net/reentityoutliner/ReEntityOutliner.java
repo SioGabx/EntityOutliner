@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 
 
 import com.google.gson.JsonObject;
-import com.google.gson.JsonSyntaxException;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -86,14 +85,14 @@ public class ReEntityOutliner implements ClientModInitializer {
                 List<List<String>> outlinedEntityNames = GSON.fromJson(config.get("outlinedEntities"), setType);
 
                 Map<EntityType<?>, Color> outlinedEntityTypes = outlinedEntityNames.stream()
-                    .collect(Collectors.toMap(list -> EntityType.get(list.get(0)).get(), list -> Color.valueOf(list.get(1))));
+                    .collect(Collectors.toMap(list -> EntityType.get(list.getFirst()).get(), list -> Color.valueOf(list.get(1))));
 
                 for (EntityType<?> entityType : Registries.ENTITY_TYPE)
                     if (outlinedEntityTypes.containsKey(entityType))
                         EntitySelector.outlinedEntityTypes.put(entityType, outlinedEntityTypes.get(entityType));
             }
         }
-        catch (IOException | JsonSyntaxException ex) {
+        catch (Exception ex) {
             logException(ex, "Failed to load reentityoutliner config");
         }
     }

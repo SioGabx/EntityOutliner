@@ -118,7 +118,11 @@ public class EntitySelector extends Screen {
         this.addDrawableChild(
                 ButtonWidget.builder(
                         Text.translatable("button.re-entity-outliner.done"),
-                        (button) -> this.client.setScreen(null)
+                        (button) -> {
+                            if (this.client != null) {
+                                this.client.setScreen(null);
+                            }
+                        }
                 ).size(buttonWidth, buttonHeight).position(buttonInterval + (buttonWidth + buttonInterval) * 4, buttonY).build()
         );
 
@@ -205,7 +209,9 @@ public class EntitySelector extends Screen {
 
                 for (SpawnGroup category : SpawnGroup.values()) {
                     if (resultsByCategory.containsKey(category)) {
-                        list.addListEntry(EntityListWidget.HeaderEntry.create(category, this.client.textRenderer, this.width, 25));
+                        if (this.client != null) {
+                            list.addListEntry(EntityListWidget.HeaderEntry.create(category, this.client.textRenderer, this.width, 25));
+                        }
 
                         for (EntityType<?> entityType : resultsByCategory.get(category)) {
                             list.addListEntry(EntityListWidget.EntityEntry.create(entityType, this.width));
@@ -220,11 +226,13 @@ public class EntitySelector extends Screen {
                 }
             }
         } else { // If there are no results, let the user know
-            list.addListEntry(EntityListWidget.HeaderEntry.create(null, this.client.textRenderer, this.width, 25));
+            if (this.client != null) {
+                list.addListEntry(EntityListWidget.HeaderEntry.create(null, this.client.textRenderer, this.width, 25));
+            }
         }
 
         // This prevents an overscroll when the user is already scrolled down and the results list is shortened
-        list.setScrollAmount(list.getScrollAmount());
+        list.setScrollY(list.getMaxScrollY());
     }
 
     // Called when config screen is escaped

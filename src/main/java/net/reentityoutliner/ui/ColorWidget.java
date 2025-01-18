@@ -58,7 +58,8 @@ public class ColorWidget extends PressableWidget {
         GREEN(0, 255, 0, Text.of("GREEN")),
         BLUE(0, 0, 255, Text.of("BLUE")),
         PURPLE(127, 0, 127, Text.of("PURPLE")),
-        PINK(255, 155, 182, Text.of("PINK"));
+        PINK(255, 155, 182, Text.of("PINK")),
+        CYAN(0, 255, 255, Text.of("CYAN"));
 
         public final int red;
         public final int green;

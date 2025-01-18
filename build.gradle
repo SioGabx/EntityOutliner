@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '1.7.1'
+	id 'fabric-loom' version '1.9-SNAPSHOT'
 	id 'maven-publish'
 }
 
@@ -53,7 +53,8 @@ tasks.withType(JavaCompile) {
 // if it is present.
 // If you remove this task, sources will not be generated.
 tasks.withType(JavaCompile).configureEach {
-	it.options.release = 17
+	it.options.release = 21
+	//it.options.release = 17
 }
 
 jar {
