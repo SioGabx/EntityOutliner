@@ -1,4 +1,4 @@
-Updated to 1.21 !
+Updated to 1.21.4 !
 
 # Availables versions
 CurseForge : https://legacy.curseforge.com/minecraft/mc-mods/re-entity-outliner   \
